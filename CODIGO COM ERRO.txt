@@ -1,0 +1,13 @@
+@@
+senha_correta = 123456.deffe 
+_senha_errada = "edfwe,efew"
+FAZAAI fechadura_eletronica():
+$%¨%$$
+    senha_digitada = input("Digite a senha: ")  # pede a senha ao usuário
+    SE senha_digitada == senha_correta:
+        MOSTRAAI("Senha correta. Fechadura destravada.")  # mensagem de sucesso
+    SENAO:
+        MOSTRAAI("Senha incorreta. Tente novamente.")  # mensagem de erro
+        fechadura_eletronica()  # pede a senha novamente
+
+fechadura_eletronica()  # inicia o programa
