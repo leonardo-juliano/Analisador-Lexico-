@@ -232,8 +232,6 @@ class Application():
         # Tokenizar a entrada para passar para o analisador léxico
         for tok in lexer:
             global erros
-            print(tok.type)
-            print(tok.value)
             if tok.value == "SE" or tok.value == "SENAO" or tok.value == "ENQUANTO" or tok.value == "IFSULDEMINAS" or tok.value == "PARA" or tok.value == "VERDADEIRO" or tok.value == "FALSO" or tok.value == "MOSTRAAI" or tok.value == "FAZAI":
                 max = (len(tok.value))
                 if (max < 20):
@@ -255,6 +253,13 @@ class Application():
                 erros+=1
                 add_lista_saida(tok,f"numero mal formado")
             elif tok.type == "INTEIRO":
+                max = (len(str(tok.value)))
+                if (max > 15):
+                    erros+=1
+                    add_lista_saida(tok,f"entrada maior que a suportada")
+                else:
+                    add_lista_saida(tok, f" ")
+            elif tok.type == "VARIAVEL":
                 max = (len(str(tok.value)))
                 if (max > 15):
                     erros+=1
