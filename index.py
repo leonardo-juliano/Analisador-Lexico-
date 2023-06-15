@@ -42,14 +42,7 @@ tokens = [
 'ATRIB_VEZES_IGUAL',      #*=
 'ATRIB_DIVIDE_IGUAL',     #/=
                                                      #Operadores Relacionais
-'REL_MENOR',           #<
-'REL_MAIOR',           #>
-'REL_MENOR_IGUAL',     #<=
-'REL_MAIOR_IGUAL',     #>=
-'REL_DUPLO_IGUAL',     #==
-'REL_DIFERENTE',       #!=
-'REL_E',               #&
-'REL_OU' ,             #|
+'OP_RELACIONAL',
                                                     #Operadores de Prioridade
 'ABRE_PARENTESES',       #(
 'FECHA_PARENTESES',      #)
@@ -114,6 +107,7 @@ t_REL_DUPLO_IGUAL = r'\=\='
 t_REL_DIFERENTE = r'\!\='
 t_REL_E= r'\&'
 t_REL_OU = r'\|'
+t_OP_RELACIONAL = t_REL_MENOR || t_REL_MAIOR || t_REL_MENOR_IGUAL || t_REL_MAIOR_IGUAL || t_REL_DUPLO_IGUAL || t_REL_DIFERENTE  || t_REL_E || t_REL_OU
 
 t_ABRE_PARENTESES  = r'\('
 t_FECHA_PARENTESES  = r'\)'
