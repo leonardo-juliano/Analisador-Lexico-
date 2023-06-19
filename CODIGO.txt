@@ -8,10 +8,11 @@ senhaDigitada = FALAI()
 FAZAI fechadura(){ 
  SE ( senhaCerta == senhaDigitada ){ 
 	MOSTRAAI("senha digitada corretamente")
-} SENAO 
-	MOSTRAAI"Senha errada") 
-
+} SENAO {
+	MOSTRAAI("Senha errada") 
+}
 }
 
 FAZAI.fechadura 
+
 FIM
