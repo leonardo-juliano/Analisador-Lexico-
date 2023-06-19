@@ -1,10 +1,11 @@
 import ply.lex as lex
+from ply import yacc
+from cProfile import label
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import filedialog as fd
-
 # Palavras Reservadas da Linguagem 
 reserved = {
    'SE' : 'SE',
@@ -16,6 +17,10 @@ reserved = {
    'FALSO':'FALSO',
    'MOSTRAAI':'MOSTRAAI',
    'FAZAI':'FAZAI',
+   'FALAI' : 'FALAI',
+   'COMPILADORES':'COMPILADORES',
+   'INICIO':'INICIO',
+   'FIM':'FIM'
 }
 
 # Lista para os nomes dos tokens
@@ -36,13 +41,27 @@ tokens = [
 'COMENTARIO',   ##
 #Operadores de Atribuição
 'ATRIB_NEGACAO',          #~
-'ATRIB_IGUAL',            #=
+'ATRIB_IGUAL',  #=
 'ATRIB_MAIS_IGUAL',       #+=
 'ATRIB_MENOS_IGUAL',      #-=
 'ATRIB_VEZES_IGUAL',      #*=
-'ATRIB_DIVIDE_IGUAL',     #/=
-                                                     #Operadores Relacionais
+'ATRIB_DIVIDE_IGUAL', 
+
+
+'OP_DIF_IGUAL',
+
 'OP_RELACIONAL',
+'PONTO_VIRGULA',
+
+                                                     #Operadores Relacionais
+'REL_MENOR',           #<
+'REL_MAIOR',           #>
+'REL_MENOR_IGUAL',     #<=
+'REL_MAIOR_IGUAL',     #>=
+'REL_DUPLO_IGUAL',     #==
+'REL_DIFERENTE',       #!=
+'REL_E',               #&
+'REL_OU' ,             #|
                                                     #Operadores de Prioridade
 'ABRE_PARENTESES',       #(
 'FECHA_PARENTESES',      #)
@@ -78,11 +97,17 @@ t_DOIS_PONTOS = r'\:'
 t_FINAL_LINHA= r'\;'
 t_VIRGULA = r'\,'
 t_PONTO = r'\.'
+t_PONTO_VIRGULA = r'\;'
+
+
 
 t_ASPAS = r'\"'
 t_COMENTARIO = r'\#.*'
 
 t_IFSULDEMINAS = r'IFSULDEMINAS'
+t_INICIO = r'INICIO'
+t_FIM = r'FIM'
+t_COMPILADORES = r'COMPILADORES'
 t_ENQUANTO = r'ENQUANTO'
 t_SE = r'SE'
 t_SENAO = r'SENAO'
@@ -91,9 +116,11 @@ t_VERDADEIRO = r'VERDADEIRO'
 t_FALSO = r'FALSO'
 t_MOSTRAAI = r'MOSTRAAI'
 t_FAZAI = r'FAZAI'
+t_FALAI = r'FALAI'
 
 t_ATRIB_NEGACAO = r'\~'
 t_ATRIB_IGUAL = r'\='
+t_OP_DIF_IGUAL = r'\!\='
 t_ATRIB_MAIS_IGUAL = r'\+\='
 t_ATRIB_MENOS_IGUAL = r'\-\='
 t_ATRIB_VEZES_IGUAL = r'\*\='
@@ -107,7 +134,8 @@ t_REL_DUPLO_IGUAL = r'\=\='
 t_REL_DIFERENTE = r'\!\='
 t_REL_E= r'\&'
 t_REL_OU = r'\|'
-t_OP_RELACIONAL = t_REL_MENOR || t_REL_MAIOR || t_REL_MENOR_IGUAL || t_REL_MAIOR_IGUAL || t_REL_DUPLO_IGUAL || t_REL_DIFERENTE  || t_REL_E || t_REL_OU
+
+#t_OP_RELACIONAL = t_REL_MENOR | t_REL_MAIOR | t_REL_MENOR_IGUAL | t_REL_MAIOR_IGUAL | t_REL_DUPLO_IGUAL | t_REL_DIFERENTE  | t_REL_E | t_REL_OU
 
 t_ABRE_PARENTESES  = r'\('
 t_FECHA_PARENTESES  = r'\)'
@@ -145,7 +173,7 @@ def t_INTEIRO(t):
     return t
 
 def t_VARIAVEL(t):
-   r'[A-Za-z][A-Za-z_0-9]*'
+   r'[a-z][a-z_0-9A-Z]*'
    return t
 
 #Defina uma regra para que seja possível rastrear o números de linha
@@ -167,6 +195,143 @@ def t_error(t):
     t.lexer.skip(1)
     
 erros = 0
+
+
+#analise sintatica 
+def p_statements_multiple(p):
+   '''
+   statements : statements statement
+   '''
+
+def p_statements_single(p):
+    '''
+    statements : statement
+    ''' 
+def p_ifsuldeminas(p):
+    '''
+    statement : IFSULDEMINAS COMPILADORES INICIO comandos FIM
+     '''
+    
+def p_comandos(p):
+    '''
+    comandos : comando 
+    | comando comandos
+    '''
+
+def p_mostraai(p):
+    '''
+    comando : MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES 
+    '''
+
+def p_falai(p):
+    '''
+    comando : VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
+    '''
+
+# def p_comentario(p):
+#     '''
+#     comando : COMENTARIO VARIAVEL
+#     '''
+
+
+def p_possibilidades_mostraai(p):
+    '''
+    possibilidades_mostraai : STRING 
+    | INTEIRO 
+    | VARIAVEL 
+    | STRING possibilidades_mostraai 
+    | INTEIRO possibilidades_mostraai 
+    | VARIAVEL possibilidades_mostraai 
+    '''
+
+def p_declara_variavel(p):
+    '''
+    comando : declara_varias_variaveis
+    '''
+
+def p_declara_varias_variaveis(p):
+    '''
+    declara_varias_variaveis : VARIAVEL ATRIB_IGUAL mat_multi
+    | VARIAVEL ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis
+    '''
+
+def p_op_mat(p):
+    '''
+    op_matematica : OP_MAIS
+    | OP_MENOS
+    | OP_VEZES
+    | OP_DIVIDE
+    | OP_MODULO
+    '''
+
+def p_mat_mult(p):
+    '''
+    mat_multi : possibilidade_if_comparacao 
+    | possibilidade_if_comparacao op_matematica mat_multi
+    '''
+
+def p_se(p):
+    '''
+    comando : SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES
+    | SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES SENAO ABRE_CHAVES comandos FECHA_CHAVES 
+    '''
+
+def p_fazai(p):
+    '''
+    comando : FAZAI chamada_funcao ABRE_CHAVES comandos FECHA_CHAVES
+    '''
+def p_chama_fazai(p):
+    '''
+    comando : FAZAI PONTO VARIAVEL
+    '''
+def p_chamamada_funcao(p):
+    '''
+    chamada_funcao : VARIAVEL ABRE_PARENTESES FECHA_PARENTESES
+    | VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao FECHA_PARENTESES
+    | VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao VIRGULA possibilidade_if_comparacao FECHA_PARENTESES
+    '''
+
+
+def p_comparacao(p):
+    '''
+    comparacao : possibilidade_if_comparacao op_relacional possibilidade_if_comparacao 
+    | possibilidade_if_comparacao op_relacional possibilidade_if_comparacao op_logico comparacao
+    '''
+
+def p_op_logico(p):
+    '''
+    op_logico : REL_E
+    | REL_OU
+    '''
+
+def p_op_relacional(p):
+    '''
+    op_relacional : REL_MENOR
+    | REL_MAIOR
+    | REL_MENOR_IGUAL
+    | REL_MAIOR_IGUAL
+    | REL_DUPLO_IGUAL
+    | REL_DIFERENTE
+    '''
+
+def p_possibilidade_if_comparacao(p):
+    '''
+    possibilidade_if_comparacao : VARIAVEL 
+    | INTEIRO
+    | STRING
+    | VERDADEIRO
+    | FALSO
+    '''
+
+errossintaticos = []
+def p_error(p):
+    errossintaticos.append(p)
+    print("ERRO: ",p)
+
+parser = yacc.yacc()
+
+erros = 0
+
 
 #função padrão para adicionar as classificações dos tokens para ser impressa pelo compilador
 def add_lista_saida(t,notificacao):
@@ -198,7 +363,7 @@ class Application():
         root.update()
 
     def tela(self):
-        self.root.title("ANALISADOR LÉXICO")
+        self.root.title("ANALISADOR LÉXICO e SINTÁTICO")
         self.root.configure(background="white")
         self.root.geometry("1200x600")
         self.root.resizable(True, True)
@@ -263,9 +428,6 @@ class Application():
             
             else:
                 add_lista_saida(tok, f" ")
-        if (saidas[0][3] != "IFSULDEMINAS"):
-                erros += 1
-                self.saida.insert('', tk.END, values="Algoritmo sem IFSULDEMINAS no início, condicao obrigatoria")
         for tok in erroslexicos:
             add_lista_saida(tok,f"Caracter Inválido nesta linguagem")
 
@@ -277,6 +439,26 @@ class Application():
 
         for retorno in saidas:
             self.saida.insert('', tk.END, values=retorno)
+
+        self.saida.place(relx=0.001, rely=0.01, relwidth=0.999, relheight=0.95)
+
+        self.scrollAnalise = ttk.Scrollbar(self.frame_2, orient='vertical',command=self.saida.yview)
+        self.scrollAnalise.place(relx=0.979, rely=0.0192, relwidth=0.02, relheight=0.92)
+        self.saida['yscrollcommand'] = self.scrollAnalise
+        
+        tamerroslex = len(erroslexicos)
+        if tamerroslex == 0 and erros == 0:
+            self.saida.insert('', tk.END, values="Análise Léxica Concluída sem Erros")
+            parser.parse(data)
+            tamerrosin = len(errossintaticos)
+            print(errossintaticos)
+            if tamerrosin == 0:
+                self.saida.insert('', tk.END, values="Análise Sintática Concluída sem Erros")
+            else:
+                self.saida.insert('', tk.END, values="Erro Sintático")
+        else:
+            self.saida.insert('', tk.END, values="Erro Léxico")
+
 
         self.saida.place(relx=0.001, rely=0.01, relwidth=0.999, relheight=0.95)
 
@@ -312,6 +494,7 @@ class Application():
     def Menus(self):
         menubar = Menu(self.root)
         self.root.config(menu=menubar)
+        filemenu2 = Menu(menubar)
 
         def Quit(): self.root.destroy()
 
@@ -331,9 +514,95 @@ class Application():
             t = self.codigo_entry.get(0.0, END)
             files.write(t.rstrip())
 
+        def tokens():
+            newWindow = Toplevel(root)
+            newWindow.title("Tabela de Tokens")
+            newWindow.configure(background="white")
+            newWindow.geometry("800x800")
+            newWindow.resizable(True, True)
+            newWindow.minsize(width=550, height=350)
+
+            newWindow = ttk.Treeview(newWindow, height=3, column=('col1', 'col2', 'col3', 'col4'))
+            newWindow.heading("#0", text='')
+            newWindow.heading("#1", text='Tokens')
+            newWindow.heading("#2", text='Lexemas')
+            newWindow.heading("#3", text='Expressão Regular')
+            newWindow.heading("#4", text='Descrição')
+
+            newWindow.column("#0", width=1, stretch=NO)
+            newWindow.column("#1", width=50, )
+            newWindow.column("#2", width=200)
+            newWindow.column("#3", width=125)
+            newWindow.column("#4", width=125)
+
+            newWindow.place(relx=0.001, rely=0.01, relwidth=0.999, relheight=0.95)
+
+            newWindow.insert("", 1, text="", values=("ifsuldeminas", "ifsuldeminas", "ifsuldeminas", "Palavra Reservada ifsuldeminas"))
+
+            newWindow.insert("", 11, text="", values=("SE", "SE", "SE", "Palavra Reservada if"))
+            newWindow.insert("", 12, text="", values=("elif", "elif", "elif", "Palavra Reservada elif"))
+            newWindow.insert("", 13, text="", values=("SENAO", "SENAO", "SENAO", "Palavra Reservada else"))
+            newWindow.insert("", 14, text="", values=("for", "for", "for", "Palavra Reservada for"))
+            newWindow.insert("", 15, text="", values=("while", "while", "while", "Palavra Reservada while"))
+            newWindow.insert("", 16, text="", values=("printf", "printf", "printf", "Palavra Reservada printf"))
+            newWindow.insert("", 17, text="", values=("true", "true", "true", "Palavra Reservada true"))
+            newWindow.insert("", 18, text="", values=("false", "false", "false", "Palavra Reservada false"))
+            newWindow.insert("", 19, text="", values=("aux", "aux", "aux", "Palavra Reservada aux"))
+
+            newWindow.insert("", 20, text="", values=("op_mat_mais", "+", "+", "Operador Matemático mais"))
+            newWindow.insert("", 21, text="", values=("op_mat_menos", "-", "-", "Operador Matemático menos"))
+            newWindow.insert("", 22, text="", values=("op_mat_vezes", "*", "*", "Operador Matemático vezes"))
+            newWindow.insert("", 23, text="", values=("op_mat_divide", "/", "/", "Operador Matemático divide"))
+            newWindow.insert("", 24, text="", values=("op_mat_modulo", "%", "%", "Operador Matemático modulo"))
+
+            newWindow.insert("", 25, text="", values=("op_prio_abre_parenteses", "(", "(", "Operador de Prioridade abre parenteses"))
+            newWindow.insert("", 26, text="", values=("op_prio_fecha_parenteses", ")", ")", "Operador de Prioridade fecha parenteses"))
+            newWindow.insert("", 27, text="", values=("op_prio_abre_chaves", "{", "{", "Operador de Prioridade abre chaves"))
+            newWindow.insert("", 28, text="", values=("op_prio_fecha_chaves", "}", "}", "Operador de Prioridade fecha chaves"))
+            newWindow.insert("", 29, text="", values=("op_prio_abre_colchetes", "[", "[", "Operador de Prioridade abre colchetes"))
+            newWindow.insert("", 30, text="", values=("op_prio_fecha_colchetes", "]", "]", "Operador de Prioridade fecha colchetes"))
+
+            newWindow.insert("", 31, text="", values=("op_rel_menor", "<", "<", "Operador Relacional menor"))
+            newWindow.insert("", 32, text="", values=("op_rel_maior", ">", ">", "Operador Relacional maior"))
+            newWindow.insert("", 33, text="", values=("op_rel_menor_igual", "<=", "<=", "Operador Relacional menor igual"))
+            newWindow.insert("", 34, text="", values=("op_rel_maior_igual", ">=", ">=", "Operador Relacional maior igual"))
+            newWindow.insert("", 35, text="", values=("op_rel_duplo_igual", "==", "==", "Operador Relacional duplo igual"))
+            newWindow.insert("", 36, text="", values=("op_rel_diferente", "!=", "!=", "Operador Relacional diferente"))
+            newWindow.insert("", 37, text="", values=("op_rel_e", "&", "&", "Operador Relacional e"))
+            newWindow.insert("", 38, text="", values=("op_rel_ou", "|", "|", "Operador Relacional ou"))
+
+            newWindow.insert("", 39, text="", values=("inteiro", "0,1,2,3,4,5,6,7,8,9", "0|1|2|3|4|5|6|7|8|9", "Dígito Númerico Inteiro"))
+            newWindow.insert("", 40, text="", values=("double", "0.009...9.9999", "0.00|9.999", "Dígito Númerico Double"))
+            newWindow.insert("", 41, text="", values=("char", "a,b,c...x,y,z", "a|b|c...x|y|z", "Char"))
+            newWindow.insert("", 42, text="", values=("variavel", "char(char,inteiro)*", "[char]{1}[char|inteiro]{*}", "Variável Criada"))
+            newWindow.insert("", 43, text="", values=("string", "qualquer entrada de texto", "[char]{1}[char|inteiro]{*}", "Entrada do tipo string"))
+
+            newWindow.insert("", 44, text="", values=("op_exec_virgula", ",", ",", "Operador de Execução Vírgula"))
+            newWindow.insert("", 45, text="", values=("op_exec_ponto_virgula", ";", ";", "Operador de Execução ponto e vírgula"))
+            newWindow.insert("", 46, text="", values=("op_exec_dois_pontos", ":", ":", "Operador de Execução dois pontos"))
+            newWindow.insert("", 47, text="", values=("op_exec_ponto", ".", ".", "Operador de Execução ponto"))
+
+            newWindow.insert("", 48, text="", values=("op_imp_aspas", "'", "'", "Operação de Impressão aspa"))
+
+            newWindow.insert("", 49, text="", values=("op_comentario", "#", "#", "Operador de Comentário"))
+            newWindow.insert("", 50, text="", values=("op_finallinha", "'", "'", "Operador de Final de Linha"))
+
+            newWindow.insert("", 51, text="", values=("op_atrib_negacao", "~", "~", "Operador de Atribuição negação"))
+            newWindow.insert("", 52, text="", values=("op_atri_igual", "=", "=", "Comando de Atribuição igual"))
+            newWindow.insert("", 53, text="", values=("op_atri_mais_igual", "+=", "+=", "Comando de Atribuição mais igual"))
+            newWindow.insert("", 54, text="", values=("op_atri_menos_igual", "-=", "-=", "Comando de Atribuição menos igual"))
+            newWindow.insert("", 55, text="", values=("op_atri_vezes_igual", "*=", "*=", "Comando de Atribuição vezes igual"))
+            newWindow.insert("", 56, text="", values=("op_atri_divide_igual", "/=", "/=", "Comando de Atribuição divide igual"))
+
+            label.pack(pady=10)
+            mainloop()
+
         menubar.add_command(label="Carregar código", command=onOpen)
         menubar.add_command(label="Salvar", command=onSave)
         menubar.add_command(label="Limpar", command=self.limpa_telaentrada)
+        menubar.add_cascade(label="Tabela de Tokens", menu=filemenu2)
         menubar.add_command(label="Sair", command=Quit)
+        filemenu2.add_command(label="Tokens", command=tokens)
+
 
 Application()
