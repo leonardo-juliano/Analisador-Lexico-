@@ -1,12 +1,17 @@
-IFSULDEMINAS;
-senha_correta = "123456";  # define a senha correta
+IFSULDEMINAS
+COMPILADORES
+INICIO
 
-FAZAI fechadura_eletronica():
-    senha_digitada = input("Digite a senha: ")  # pede a senha ao usuário
-    SE senha_digitada == senha_correta:
-        MOSTRAAI("Senha correta. Fechadura destravada.")  # mensagem de sucesso
-    SENAO:
-        MOSTRAAI("Senha incorreta. Tente novamente.")  # mensagem de erro
-        fechadura_eletronica()  # pede a senha novamente
+senhaCerta = FALAI() 
+senhaDigitada = FALAI()
 
-fechadura_eletronica()  # inicia o programa
+FAZAI fechadura(){ 
+ SE ( senhaCerta == senhaDigitada ){ 
+	MOSTRAAI("senha digitada corretamente")
+} SENAO 
+	MOSTRAAI"Senha errada") 
+
+}
+
+FAZAI.fechadura 
+FIM

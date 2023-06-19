@@ -102,7 +102,7 @@ t_PONTO_VIRGULA = r'\;'
 
 
 t_ASPAS = r'\"'
-t_COMENTARIO = r'\#.*'
+
 
 t_IFSULDEMINAS = r'IFSULDEMINAS'
 t_INICIO = r'INICIO'
@@ -135,8 +135,6 @@ t_REL_DIFERENTE = r'\!\='
 t_REL_E= r'\&'
 t_REL_OU = r'\|'
 
-#t_OP_RELACIONAL = t_REL_MENOR | t_REL_MAIOR | t_REL_MENOR_IGUAL | t_REL_MAIOR_IGUAL | t_REL_DUPLO_IGUAL | t_REL_DIFERENTE  | t_REL_E | t_REL_OU
-
 t_ABRE_PARENTESES  = r'\('
 t_FECHA_PARENTESES  = r'\)'
 t_ABRE_COLCHETES = r'\['
@@ -154,6 +152,9 @@ def t_STRING(t):
 def t_string_mf(t):
     r'("[^"]*)'
     return t
+
+def t_COMENTARIO(t):
+    r'(\#[^"]*\#)'
 
 def t_variavel_mf(t):
     r'([0-9]+[a-z]+)|([@!#$%&*]+[a-z]+|[a-z]+\.[0-9]+|[a-z]+[@!#$%&*]+)'
@@ -218,6 +219,11 @@ def p_comandos(p):
     | comando comandos
     '''
 
+def p_comentario(p):
+    '''
+    comandos : COMENTARIO VARIAVEL
+    '''
+
 def p_mostraai(p):
     '''
     comando : MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES 
@@ -227,12 +233,6 @@ def p_falai(p):
     '''
     comando : VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     '''
-
-# def p_comentario(p):
-#     '''
-#     comando : COMENTARIO VARIAVEL
-#     '''
-
 
 def p_possibilidades_mostraai(p):
     '''
@@ -540,36 +540,34 @@ class Application():
             newWindow.insert("", 1, text="", values=("ifsuldeminas", "ifsuldeminas", "ifsuldeminas", "Palavra Reservada ifsuldeminas"))
 
             newWindow.insert("", 11, text="", values=("SE", "SE", "SE", "Palavra Reservada if"))
-            newWindow.insert("", 12, text="", values=("elif", "elif", "elif", "Palavra Reservada elif"))
-            newWindow.insert("", 13, text="", values=("SENAO", "SENAO", "SENAO", "Palavra Reservada else"))
-            newWindow.insert("", 14, text="", values=("for", "for", "for", "Palavra Reservada for"))
-            newWindow.insert("", 15, text="", values=("while", "while", "while", "Palavra Reservada while"))
-            newWindow.insert("", 16, text="", values=("printf", "printf", "printf", "Palavra Reservada printf"))
-            newWindow.insert("", 17, text="", values=("true", "true", "true", "Palavra Reservada true"))
-            newWindow.insert("", 18, text="", values=("false", "false", "false", "Palavra Reservada false"))
-            newWindow.insert("", 19, text="", values=("aux", "aux", "aux", "Palavra Reservada aux"))
+            newWindow.insert("", 13, text="", values=("SENAO", "SENAO", "SENAO", "Palavra Reservada "))
+            newWindow.insert("", 15, text="", values=("ENQUANTO", "ENQUANTO", "ENQUANTO", "Palavra Reservada "))
+            newWindow.insert("", 16, text="", values=("MOSTRAAI", "MOSTRAAI", "MOSTRAAI", "Palavra Reservada "))
+            newWindow.insert("", 17, text="", values=("VERDADEIRO", "VERDADEIRO", "VERDADEIRO", "Palavra Reservada "))
+            newWindow.insert("", 18, text="", values=("FALSO", "FALSO", "FALSO", "Palavra Reservada "))
 
-            newWindow.insert("", 20, text="", values=("op_mat_mais", "+", "+", "Operador Matemático mais"))
-            newWindow.insert("", 21, text="", values=("op_mat_menos", "-", "-", "Operador Matemático menos"))
-            newWindow.insert("", 22, text="", values=("op_mat_vezes", "*", "*", "Operador Matemático vezes"))
-            newWindow.insert("", 23, text="", values=("op_mat_divide", "/", "/", "Operador Matemático divide"))
-            newWindow.insert("", 24, text="", values=("op_mat_modulo", "%", "%", "Operador Matemático modulo"))
 
-            newWindow.insert("", 25, text="", values=("op_prio_abre_parenteses", "(", "(", "Operador de Prioridade abre parenteses"))
-            newWindow.insert("", 26, text="", values=("op_prio_fecha_parenteses", ")", ")", "Operador de Prioridade fecha parenteses"))
-            newWindow.insert("", 27, text="", values=("op_prio_abre_chaves", "{", "{", "Operador de Prioridade abre chaves"))
-            newWindow.insert("", 28, text="", values=("op_prio_fecha_chaves", "}", "}", "Operador de Prioridade fecha chaves"))
-            newWindow.insert("", 29, text="", values=("op_prio_abre_colchetes", "[", "[", "Operador de Prioridade abre colchetes"))
-            newWindow.insert("", 30, text="", values=("op_prio_fecha_colchetes", "]", "]", "Operador de Prioridade fecha colchetes"))
+            newWindow.insert("", 20, text="", values=("OP_MAIS", "+", "+", "Operador Matemático mais"))
+            newWindow.insert("", 21, text="", values=("OP_MENOS", "-", "-", "Operador Matemático menos"))
+            newWindow.insert("", 22, text="", values=("OP_VEZES", "*", "*", "Operador Matemático vezes"))
+            newWindow.insert("", 23, text="", values=("OP_DIVIDE", "/", "/", "Operador Matemático divide"))
+            newWindow.insert("", 24, text="", values=("OP_MODULO", "%", "%", "Operador Matemático modulo"))
 
-            newWindow.insert("", 31, text="", values=("op_rel_menor", "<", "<", "Operador Relacional menor"))
-            newWindow.insert("", 32, text="", values=("op_rel_maior", ">", ">", "Operador Relacional maior"))
-            newWindow.insert("", 33, text="", values=("op_rel_menor_igual", "<=", "<=", "Operador Relacional menor igual"))
-            newWindow.insert("", 34, text="", values=("op_rel_maior_igual", ">=", ">=", "Operador Relacional maior igual"))
-            newWindow.insert("", 35, text="", values=("op_rel_duplo_igual", "==", "==", "Operador Relacional duplo igual"))
-            newWindow.insert("", 36, text="", values=("op_rel_diferente", "!=", "!=", "Operador Relacional diferente"))
-            newWindow.insert("", 37, text="", values=("op_rel_e", "&", "&", "Operador Relacional e"))
-            newWindow.insert("", 38, text="", values=("op_rel_ou", "|", "|", "Operador Relacional ou"))
+            newWindow.insert("", 25, text="", values=("ABRE_PARENTESES", "(", "(", "Operado abre parenteses"))
+            newWindow.insert("", 26, text="", values=("FECHA_PARENTESES", ")", ")", "Operador fecha parenteses"))
+            newWindow.insert("", 27, text="", values=("ABRE_CHAVES", "{", "{", "Operador de abre chaves"))
+            newWindow.insert("", 28, text="", values=("FECHA_CHAVES", "}", "}", "Operador de fecha chaves"))
+            newWindow.insert("", 29, text="", values=("ABRE_COLCHETES", "[", "[", "Operador de abre colchetes"))
+            newWindow.insert("", 30, text="", values=("FECHA_COLCHETES", "]", "]", "Operador de fecha colchetes"))
+
+            newWindow.insert("", 31, text="", values=("REL_MENOR", "<", "<", "Operador Relacional menor"))
+            newWindow.insert("", 32, text="", values=("REL_MAIOR", ">", ">", "Operador Relacional maior"))
+            newWindow.insert("", 33, text="", values=("REL_MENOR_IGUAL", "<=", "<=", "Operador Relacional menor igual"))
+            newWindow.insert("", 34, text="", values=("REL_MAIOR_IGUAL", ">=", ">=", "Operador Relacional maior igual"))
+            newWindow.insert("", 35, text="", values=("REL_DUPLO_IGUAL", "==", "==", "Operador Relacional duplo igual"))
+            newWindow.insert("", 36, text="", values=("REL_DIFERENTE", "!=", "!=", "Operador Relacional diferente"))
+            newWindow.insert("", 37, text="", values=("REL_E", "&", "&", "Operador Relacional e"))
+            newWindow.insert("", 38, text="", values=("REL_OU", "|", "|", "Operador Relacional ou"))
 
             newWindow.insert("", 39, text="", values=("inteiro", "0,1,2,3,4,5,6,7,8,9", "0|1|2|3|4|5|6|7|8|9", "Dígito Númerico Inteiro"))
             newWindow.insert("", 40, text="", values=("double", "0.009...9.9999", "0.00|9.999", "Dígito Númerico Double"))
@@ -577,22 +575,22 @@ class Application():
             newWindow.insert("", 42, text="", values=("variavel", "char(char,inteiro)*", "[char]{1}[char|inteiro]{*}", "Variável Criada"))
             newWindow.insert("", 43, text="", values=("string", "qualquer entrada de texto", "[char]{1}[char|inteiro]{*}", "Entrada do tipo string"))
 
-            newWindow.insert("", 44, text="", values=("op_exec_virgula", ",", ",", "Operador de Execução Vírgula"))
-            newWindow.insert("", 45, text="", values=("op_exec_ponto_virgula", ";", ";", "Operador de Execução ponto e vírgula"))
-            newWindow.insert("", 46, text="", values=("op_exec_dois_pontos", ":", ":", "Operador de Execução dois pontos"))
-            newWindow.insert("", 47, text="", values=("op_exec_ponto", ".", ".", "Operador de Execução ponto"))
+            newWindow.insert("", 44, text="", values=("VIRGULA", ",", ",", "Vírgula"))
+            newWindow.insert("", 45, text="", values=("PONTO_VIRGULA", ";", ";", "ponto e vírgula"))
+            newWindow.insert("", 46, text="", values=("DOIS_PONTOS", ":", ":", "dois pontos"))
+            newWindow.insert("", 47, text="", values=("PONTO", ".", ".", "ponto"))
 
-            newWindow.insert("", 48, text="", values=("op_imp_aspas", "'", "'", "Operação de Impressão aspa"))
+            newWindow.insert("", 48, text="", values=("ASPAS", "'", "'", "Operação aspa"))
 
-            newWindow.insert("", 49, text="", values=("op_comentario", "#", "#", "Operador de Comentário"))
-            newWindow.insert("", 50, text="", values=("op_finallinha", "'", "'", "Operador de Final de Linha"))
+            newWindow.insert("", 49, text="", values=("COMENTARIO", "#", "#", "Operador de Comentário"))
+            newWindow.insert("", 50, text="", values=("FINAL_LINHA", "'", "'", "Operador de Final de Linha"))
 
-            newWindow.insert("", 51, text="", values=("op_atrib_negacao", "~", "~", "Operador de Atribuição negação"))
-            newWindow.insert("", 52, text="", values=("op_atri_igual", "=", "=", "Comando de Atribuição igual"))
-            newWindow.insert("", 53, text="", values=("op_atri_mais_igual", "+=", "+=", "Comando de Atribuição mais igual"))
-            newWindow.insert("", 54, text="", values=("op_atri_menos_igual", "-=", "-=", "Comando de Atribuição menos igual"))
-            newWindow.insert("", 55, text="", values=("op_atri_vezes_igual", "*=", "*=", "Comando de Atribuição vezes igual"))
-            newWindow.insert("", 56, text="", values=("op_atri_divide_igual", "/=", "/=", "Comando de Atribuição divide igual"))
+            newWindow.insert("", 51, text="", values=("ATRIB_NEGACAO", "~", "~", "Operador de Atribuição negação"))
+            newWindow.insert("", 52, text="", values=("ATRIB_IGUAL", "=", "=", "Comando de Atribuição igual"))
+            newWindow.insert("", 53, text="", values=("ATRIB_MAIS_IGUAL", "+=", "+=", "Comando de Atribuição mais igual"))
+            newWindow.insert("", 54, text="", values=("ATRIB_MENOS_IGUAL", "-=", "-=", "Comando de Atribuição menos igual"))
+            newWindow.insert("", 55, text="", values=("ATRIB_VEZES_IGUAL", "*=", "*=", "Comando de Atribuição vezes igual"))
+            newWindow.insert("", 56, text="", values=("ATRIB_DIVIDE_IGUAL", "/=", "/=", "Comando de Atribuição divide igual"))
 
             label.pack(pady=10)
             mainloop()
