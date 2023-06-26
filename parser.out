@@ -33,7 +33,7 @@ Rule 2     statements -> statement
 Rule 3     statement -> IFSULDEMINAS COMPILADORES INICIO comandos FIM
 Rule 4     comandos -> comando
 Rule 5     comandos -> comando comandos
-Rule 6     comandos -> COMENTARIO VARIAVEL
+Rule 6     comando -> COMENTARIO
 Rule 7     comando -> MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
 Rule 8     comando -> VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
 Rule 9     possibilidades_mostraai -> STRING
@@ -128,7 +128,7 @@ SE                   : 25 26
 SENAO                : 26
 STRING               : 9 12 44
 TESTE                : 
-VARIAVEL             : 6 8 11 14 16 17 28 29 30 31 42
+VARIAVEL             : 8 11 14 16 17 28 29 30 31 42
 VERDADEIRO           : 45
 VIRGULA              : 17 31
 error                : 
@@ -211,7 +211,7 @@ state 6
     (3) statement -> IFSULDEMINAS COMPILADORES INICIO . comandos FIM
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comandos -> . COMENTARIO VARIAVEL
+    (6) comando -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
@@ -223,8 +223,8 @@ state 6
     (17) declara_varias_variaveis -> . VARIAVEL ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis
 
     COMENTARIO      shift and go to state 9
-    MOSTRAAI        shift and go to state 11
-    VARIAVEL        shift and go to state 10
+    MOSTRAAI        shift and go to state 10
+    VARIAVEL        shift and go to state 11
     SE              shift and go to state 13
     FAZAI           shift and go to state 14
 
@@ -245,7 +245,7 @@ state 8
     (5) comandos -> comando . comandos
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comandos -> . COMENTARIO VARIAVEL
+    (6) comando -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
@@ -259,8 +259,8 @@ state 8
     FIM             reduce using rule 4 (comandos -> comando .)
     FECHA_CHAVES    reduce using rule 4 (comandos -> comando .)
     COMENTARIO      shift and go to state 9
-    MOSTRAAI        shift and go to state 11
-    VARIAVEL        shift and go to state 10
+    MOSTRAAI        shift and go to state 10
+    VARIAVEL        shift and go to state 11
     SE              shift and go to state 13
     FAZAI           shift and go to state 14
 
@@ -270,25 +270,31 @@ state 8
 
 state 9
 
-    (6) comandos -> COMENTARIO . VARIAVEL
+    (6) comando -> COMENTARIO .
 
-    VARIAVEL        shift and go to state 17
+    COMENTARIO      reduce using rule 6 (comando -> COMENTARIO .)
+    MOSTRAAI        reduce using rule 6 (comando -> COMENTARIO .)
+    VARIAVEL        reduce using rule 6 (comando -> COMENTARIO .)
+    SE              reduce using rule 6 (comando -> COMENTARIO .)
+    FAZAI           reduce using rule 6 (comando -> COMENTARIO .)
+    FIM             reduce using rule 6 (comando -> COMENTARIO .)
+    FECHA_CHAVES    reduce using rule 6 (comando -> COMENTARIO .)
 
 
 state 10
+
+    (7) comando -> MOSTRAAI . ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
+
+    ABRE_PARENTESES shift and go to state 17
+
+
+state 11
 
     (8) comando -> VARIAVEL . ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (16) declara_varias_variaveis -> VARIAVEL . ATRIB_IGUAL mat_multi
     (17) declara_varias_variaveis -> VARIAVEL . ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis
 
     ATRIB_IGUAL     shift and go to state 18
-
-
-state 11
-
-    (7) comando -> MOSTRAAI . ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
-
-    ABRE_PARENTESES shift and go to state 19
 
 
 state 12
@@ -309,7 +315,7 @@ state 13
     (25) comando -> SE . ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES
     (26) comando -> SE . ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES SENAO ABRE_CHAVES comandos FECHA_CHAVES
 
-    ABRE_PARENTESES shift and go to state 20
+    ABRE_PARENTESES shift and go to state 19
 
 
 state 14
@@ -320,10 +326,10 @@ state 14
     (30) chamada_funcao -> . VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao FECHA_PARENTESES
     (31) chamada_funcao -> . VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao VIRGULA possibilidade_if_comparacao FECHA_PARENTESES
 
-    PONTO           shift and go to state 22
-    VARIAVEL        shift and go to state 23
+    PONTO           shift and go to state 21
+    VARIAVEL        shift and go to state 22
 
-    chamada_funcao                 shift and go to state 21
+    chamada_funcao                 shift and go to state 20
 
 state 15
 
@@ -343,11 +349,19 @@ state 16
 
 state 17
 
-    (6) comandos -> COMENTARIO VARIAVEL .
+    (7) comando -> MOSTRAAI ABRE_PARENTESES . possibilidades_mostraai FECHA_PARENTESES
+    (9) possibilidades_mostraai -> . STRING
+    (10) possibilidades_mostraai -> . INTEIRO
+    (11) possibilidades_mostraai -> . VARIAVEL
+    (12) possibilidades_mostraai -> . STRING possibilidades_mostraai
+    (13) possibilidades_mostraai -> . INTEIRO possibilidades_mostraai
+    (14) possibilidades_mostraai -> . VARIAVEL possibilidades_mostraai
 
-    FIM             reduce using rule 6 (comandos -> COMENTARIO VARIAVEL .)
-    FECHA_CHAVES    reduce using rule 6 (comandos -> COMENTARIO VARIAVEL .)
+    STRING          shift and go to state 24
+    INTEIRO         shift and go to state 25
+    VARIAVEL        shift and go to state 26
 
+    possibilidades_mostraai        shift and go to state 23
 
 state 18
 
@@ -362,33 +376,17 @@ state 18
     (45) possibilidade_if_comparacao -> . VERDADEIRO
     (46) possibilidade_if_comparacao -> . FALSO
 
-    FALAI           shift and go to state 25
-    VARIAVEL        shift and go to state 24
-    INTEIRO         shift and go to state 28
-    STRING          shift and go to state 29
-    VERDADEIRO      shift and go to state 30
-    FALSO           shift and go to state 31
+    FALAI           shift and go to state 28
+    VARIAVEL        shift and go to state 27
+    INTEIRO         shift and go to state 31
+    STRING          shift and go to state 32
+    VERDADEIRO      shift and go to state 33
+    FALSO           shift and go to state 34
 
-    mat_multi                      shift and go to state 26
-    possibilidade_if_comparacao    shift and go to state 27
+    mat_multi                      shift and go to state 29
+    possibilidade_if_comparacao    shift and go to state 30
 
 state 19
-
-    (7) comando -> MOSTRAAI ABRE_PARENTESES . possibilidades_mostraai FECHA_PARENTESES
-    (9) possibilidades_mostraai -> . STRING
-    (10) possibilidades_mostraai -> . INTEIRO
-    (11) possibilidades_mostraai -> . VARIAVEL
-    (12) possibilidades_mostraai -> . STRING possibilidades_mostraai
-    (13) possibilidades_mostraai -> . INTEIRO possibilidades_mostraai
-    (14) possibilidades_mostraai -> . VARIAVEL possibilidades_mostraai
-
-    STRING          shift and go to state 33
-    INTEIRO         shift and go to state 34
-    VARIAVEL        shift and go to state 35
-
-    possibilidades_mostraai        shift and go to state 32
-
-state 20
 
     (25) comando -> SE ABRE_PARENTESES . comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES
     (26) comando -> SE ABRE_PARENTESES . comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES SENAO ABRE_CHAVES comandos FECHA_CHAVES
@@ -400,39 +398,100 @@ state 20
     (45) possibilidade_if_comparacao -> . VERDADEIRO
     (46) possibilidade_if_comparacao -> . FALSO
 
-    VARIAVEL        shift and go to state 24
-    INTEIRO         shift and go to state 28
-    STRING          shift and go to state 29
-    VERDADEIRO      shift and go to state 30
-    FALSO           shift and go to state 31
+    VARIAVEL        shift and go to state 27
+    INTEIRO         shift and go to state 31
+    STRING          shift and go to state 32
+    VERDADEIRO      shift and go to state 33
+    FALSO           shift and go to state 34
 
-    comparacao                     shift and go to state 36
-    possibilidade_if_comparacao    shift and go to state 37
+    comparacao                     shift and go to state 35
+    possibilidade_if_comparacao    shift and go to state 36
 
-state 21
+state 20
 
     (27) comando -> FAZAI chamada_funcao . ABRE_CHAVES comandos FECHA_CHAVES
 
-    ABRE_CHAVES     shift and go to state 38
+    ABRE_CHAVES     shift and go to state 37
 
 
-state 22
+state 21
 
     (28) comando -> FAZAI PONTO . VARIAVEL
 
-    VARIAVEL        shift and go to state 39
+    VARIAVEL        shift and go to state 38
 
 
-state 23
+state 22
 
     (29) chamada_funcao -> VARIAVEL . ABRE_PARENTESES FECHA_PARENTESES
     (30) chamada_funcao -> VARIAVEL . ABRE_PARENTESES possibilidade_if_comparacao FECHA_PARENTESES
     (31) chamada_funcao -> VARIAVEL . ABRE_PARENTESES possibilidade_if_comparacao VIRGULA possibilidade_if_comparacao FECHA_PARENTESES
 
-    ABRE_PARENTESES shift and go to state 40
+    ABRE_PARENTESES shift and go to state 39
+
+
+state 23
+
+    (7) comando -> MOSTRAAI ABRE_PARENTESES possibilidades_mostraai . FECHA_PARENTESES
+
+    FECHA_PARENTESES shift and go to state 40
 
 
 state 24
+
+    (9) possibilidades_mostraai -> STRING .
+    (12) possibilidades_mostraai -> STRING . possibilidades_mostraai
+    (9) possibilidades_mostraai -> . STRING
+    (10) possibilidades_mostraai -> . INTEIRO
+    (11) possibilidades_mostraai -> . VARIAVEL
+    (12) possibilidades_mostraai -> . STRING possibilidades_mostraai
+    (13) possibilidades_mostraai -> . INTEIRO possibilidades_mostraai
+    (14) possibilidades_mostraai -> . VARIAVEL possibilidades_mostraai
+
+    FECHA_PARENTESES reduce using rule 9 (possibilidades_mostraai -> STRING .)
+    STRING          shift and go to state 24
+    INTEIRO         shift and go to state 25
+    VARIAVEL        shift and go to state 26
+
+    possibilidades_mostraai        shift and go to state 41
+
+state 25
+
+    (10) possibilidades_mostraai -> INTEIRO .
+    (13) possibilidades_mostraai -> INTEIRO . possibilidades_mostraai
+    (9) possibilidades_mostraai -> . STRING
+    (10) possibilidades_mostraai -> . INTEIRO
+    (11) possibilidades_mostraai -> . VARIAVEL
+    (12) possibilidades_mostraai -> . STRING possibilidades_mostraai
+    (13) possibilidades_mostraai -> . INTEIRO possibilidades_mostraai
+    (14) possibilidades_mostraai -> . VARIAVEL possibilidades_mostraai
+
+    FECHA_PARENTESES reduce using rule 10 (possibilidades_mostraai -> INTEIRO .)
+    STRING          shift and go to state 24
+    INTEIRO         shift and go to state 25
+    VARIAVEL        shift and go to state 26
+
+    possibilidades_mostraai        shift and go to state 42
+
+state 26
+
+    (11) possibilidades_mostraai -> VARIAVEL .
+    (14) possibilidades_mostraai -> VARIAVEL . possibilidades_mostraai
+    (9) possibilidades_mostraai -> . STRING
+    (10) possibilidades_mostraai -> . INTEIRO
+    (11) possibilidades_mostraai -> . VARIAVEL
+    (12) possibilidades_mostraai -> . STRING possibilidades_mostraai
+    (13) possibilidades_mostraai -> . INTEIRO possibilidades_mostraai
+    (14) possibilidades_mostraai -> . VARIAVEL possibilidades_mostraai
+
+    FECHA_PARENTESES reduce using rule 11 (possibilidades_mostraai -> VARIAVEL .)
+    STRING          shift and go to state 24
+    INTEIRO         shift and go to state 25
+    VARIAVEL        shift and go to state 26
+
+    possibilidades_mostraai        shift and go to state 43
+
+state 27
 
     (42) possibilidade_if_comparacao -> VARIAVEL .
 
@@ -460,14 +519,14 @@ state 24
     REL_OU          reduce using rule 42 (possibilidade_if_comparacao -> VARIAVEL .)
 
 
-state 25
+state 28
 
     (8) comando -> VARIAVEL ATRIB_IGUAL FALAI . ABRE_PARENTESES FECHA_PARENTESES
 
-    ABRE_PARENTESES shift and go to state 41
+    ABRE_PARENTESES shift and go to state 44
 
 
-state 26
+state 29
 
     (16) declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL mat_multi .
     (17) declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL mat_multi . VIRGULA declara_varias_variaveis
@@ -479,10 +538,10 @@ state 26
     FAZAI           reduce using rule 16 (declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL mat_multi .)
     FIM             reduce using rule 16 (declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL mat_multi .)
     FECHA_CHAVES    reduce using rule 16 (declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL mat_multi .)
-    VIRGULA         shift and go to state 42
+    VIRGULA         shift and go to state 45
 
 
-state 27
+state 30
 
     (23) mat_multi -> possibilidade_if_comparacao .
     (24) mat_multi -> possibilidade_if_comparacao . op_matematica mat_multi
@@ -500,15 +559,15 @@ state 27
     FAZAI           reduce using rule 23 (mat_multi -> possibilidade_if_comparacao .)
     FIM             reduce using rule 23 (mat_multi -> possibilidade_if_comparacao .)
     FECHA_CHAVES    reduce using rule 23 (mat_multi -> possibilidade_if_comparacao .)
-    OP_MAIS         shift and go to state 44
-    OP_MENOS        shift and go to state 45
-    OP_VEZES        shift and go to state 46
-    OP_DIVIDE       shift and go to state 47
-    OP_MODULO       shift and go to state 48
+    OP_MAIS         shift and go to state 47
+    OP_MENOS        shift and go to state 48
+    OP_VEZES        shift and go to state 49
+    OP_DIVIDE       shift and go to state 50
+    OP_MODULO       shift and go to state 51
 
-    op_matematica                  shift and go to state 43
+    op_matematica                  shift and go to state 46
 
-state 28
+state 31
 
     (43) possibilidade_if_comparacao -> INTEIRO .
 
@@ -536,7 +595,7 @@ state 28
     REL_OU          reduce using rule 43 (possibilidade_if_comparacao -> INTEIRO .)
 
 
-state 29
+state 32
 
     (44) possibilidade_if_comparacao -> STRING .
 
@@ -564,7 +623,7 @@ state 29
     REL_OU          reduce using rule 44 (possibilidade_if_comparacao -> STRING .)
 
 
-state 30
+state 33
 
     (45) possibilidade_if_comparacao -> VERDADEIRO .
 
@@ -592,7 +651,7 @@ state 30
     REL_OU          reduce using rule 45 (possibilidade_if_comparacao -> VERDADEIRO .)
 
 
-state 31
+state 34
 
     (46) possibilidade_if_comparacao -> FALSO .
 
@@ -620,76 +679,15 @@ state 31
     REL_OU          reduce using rule 46 (possibilidade_if_comparacao -> FALSO .)
 
 
-state 32
-
-    (7) comando -> MOSTRAAI ABRE_PARENTESES possibilidades_mostraai . FECHA_PARENTESES
-
-    FECHA_PARENTESES shift and go to state 49
-
-
-state 33
-
-    (9) possibilidades_mostraai -> STRING .
-    (12) possibilidades_mostraai -> STRING . possibilidades_mostraai
-    (9) possibilidades_mostraai -> . STRING
-    (10) possibilidades_mostraai -> . INTEIRO
-    (11) possibilidades_mostraai -> . VARIAVEL
-    (12) possibilidades_mostraai -> . STRING possibilidades_mostraai
-    (13) possibilidades_mostraai -> . INTEIRO possibilidades_mostraai
-    (14) possibilidades_mostraai -> . VARIAVEL possibilidades_mostraai
-
-    FECHA_PARENTESES reduce using rule 9 (possibilidades_mostraai -> STRING .)
-    STRING          shift and go to state 33
-    INTEIRO         shift and go to state 34
-    VARIAVEL        shift and go to state 35
-
-    possibilidades_mostraai        shift and go to state 50
-
-state 34
-
-    (10) possibilidades_mostraai -> INTEIRO .
-    (13) possibilidades_mostraai -> INTEIRO . possibilidades_mostraai
-    (9) possibilidades_mostraai -> . STRING
-    (10) possibilidades_mostraai -> . INTEIRO
-    (11) possibilidades_mostraai -> . VARIAVEL
-    (12) possibilidades_mostraai -> . STRING possibilidades_mostraai
-    (13) possibilidades_mostraai -> . INTEIRO possibilidades_mostraai
-    (14) possibilidades_mostraai -> . VARIAVEL possibilidades_mostraai
-
-    FECHA_PARENTESES reduce using rule 10 (possibilidades_mostraai -> INTEIRO .)
-    STRING          shift and go to state 33
-    INTEIRO         shift and go to state 34
-    VARIAVEL        shift and go to state 35
-
-    possibilidades_mostraai        shift and go to state 51
-
 state 35
-
-    (11) possibilidades_mostraai -> VARIAVEL .
-    (14) possibilidades_mostraai -> VARIAVEL . possibilidades_mostraai
-    (9) possibilidades_mostraai -> . STRING
-    (10) possibilidades_mostraai -> . INTEIRO
-    (11) possibilidades_mostraai -> . VARIAVEL
-    (12) possibilidades_mostraai -> . STRING possibilidades_mostraai
-    (13) possibilidades_mostraai -> . INTEIRO possibilidades_mostraai
-    (14) possibilidades_mostraai -> . VARIAVEL possibilidades_mostraai
-
-    FECHA_PARENTESES reduce using rule 11 (possibilidades_mostraai -> VARIAVEL .)
-    STRING          shift and go to state 33
-    INTEIRO         shift and go to state 34
-    VARIAVEL        shift and go to state 35
-
-    possibilidades_mostraai        shift and go to state 52
-
-state 36
 
     (25) comando -> SE ABRE_PARENTESES comparacao . FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES
     (26) comando -> SE ABRE_PARENTESES comparacao . FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES SENAO ABRE_CHAVES comandos FECHA_CHAVES
 
-    FECHA_PARENTESES shift and go to state 53
+    FECHA_PARENTESES shift and go to state 52
 
 
-state 37
+state 36
 
     (32) comparacao -> possibilidade_if_comparacao . op_relacional possibilidade_if_comparacao
     (33) comparacao -> possibilidade_if_comparacao . op_relacional possibilidade_if_comparacao op_logico comparacao
@@ -700,21 +698,21 @@ state 37
     (40) op_relacional -> . REL_DUPLO_IGUAL
     (41) op_relacional -> . REL_DIFERENTE
 
-    REL_MENOR       shift and go to state 55
-    REL_MAIOR       shift and go to state 56
-    REL_MENOR_IGUAL shift and go to state 57
-    REL_MAIOR_IGUAL shift and go to state 58
-    REL_DUPLO_IGUAL shift and go to state 59
-    REL_DIFERENTE   shift and go to state 60
+    REL_MENOR       shift and go to state 54
+    REL_MAIOR       shift and go to state 55
+    REL_MENOR_IGUAL shift and go to state 56
+    REL_MAIOR_IGUAL shift and go to state 57
+    REL_DUPLO_IGUAL shift and go to state 58
+    REL_DIFERENTE   shift and go to state 59
 
-    op_relacional                  shift and go to state 54
+    op_relacional                  shift and go to state 53
 
-state 38
+state 37
 
     (27) comando -> FAZAI chamada_funcao ABRE_CHAVES . comandos FECHA_CHAVES
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comandos -> . COMENTARIO VARIAVEL
+    (6) comando -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
@@ -726,16 +724,16 @@ state 38
     (17) declara_varias_variaveis -> . VARIAVEL ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis
 
     COMENTARIO      shift and go to state 9
-    MOSTRAAI        shift and go to state 11
-    VARIAVEL        shift and go to state 10
+    MOSTRAAI        shift and go to state 10
+    VARIAVEL        shift and go to state 11
     SE              shift and go to state 13
     FAZAI           shift and go to state 14
 
-    comandos                       shift and go to state 61
+    comandos                       shift and go to state 60
     comando                        shift and go to state 8
     declara_varias_variaveis       shift and go to state 12
 
-state 39
+state 38
 
     (28) comando -> FAZAI PONTO VARIAVEL .
 
@@ -748,7 +746,7 @@ state 39
     FECHA_CHAVES    reduce using rule 28 (comando -> FAZAI PONTO VARIAVEL .)
 
 
-state 40
+state 39
 
     (29) chamada_funcao -> VARIAVEL ABRE_PARENTESES . FECHA_PARENTESES
     (30) chamada_funcao -> VARIAVEL ABRE_PARENTESES . possibilidade_if_comparacao FECHA_PARENTESES
@@ -759,108 +757,16 @@ state 40
     (45) possibilidade_if_comparacao -> . VERDADEIRO
     (46) possibilidade_if_comparacao -> . FALSO
 
-    FECHA_PARENTESES shift and go to state 62
-    VARIAVEL        shift and go to state 24
-    INTEIRO         shift and go to state 28
-    STRING          shift and go to state 29
-    VERDADEIRO      shift and go to state 30
-    FALSO           shift and go to state 31
+    FECHA_PARENTESES shift and go to state 61
+    VARIAVEL        shift and go to state 27
+    INTEIRO         shift and go to state 31
+    STRING          shift and go to state 32
+    VERDADEIRO      shift and go to state 33
+    FALSO           shift and go to state 34
 
-    possibilidade_if_comparacao    shift and go to state 63
+    possibilidade_if_comparacao    shift and go to state 62
 
-state 41
-
-    (8) comando -> VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES . FECHA_PARENTESES
-
-    FECHA_PARENTESES shift and go to state 64
-
-
-state 42
-
-    (17) declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL mat_multi VIRGULA . declara_varias_variaveis
-    (16) declara_varias_variaveis -> . VARIAVEL ATRIB_IGUAL mat_multi
-    (17) declara_varias_variaveis -> . VARIAVEL ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis
-
-    VARIAVEL        shift and go to state 65
-
-    declara_varias_variaveis       shift and go to state 66
-
-state 43
-
-    (24) mat_multi -> possibilidade_if_comparacao op_matematica . mat_multi
-    (23) mat_multi -> . possibilidade_if_comparacao
-    (24) mat_multi -> . possibilidade_if_comparacao op_matematica mat_multi
-    (42) possibilidade_if_comparacao -> . VARIAVEL
-    (43) possibilidade_if_comparacao -> . INTEIRO
-    (44) possibilidade_if_comparacao -> . STRING
-    (45) possibilidade_if_comparacao -> . VERDADEIRO
-    (46) possibilidade_if_comparacao -> . FALSO
-
-    VARIAVEL        shift and go to state 24
-    INTEIRO         shift and go to state 28
-    STRING          shift and go to state 29
-    VERDADEIRO      shift and go to state 30
-    FALSO           shift and go to state 31
-
-    possibilidade_if_comparacao    shift and go to state 27
-    mat_multi                      shift and go to state 67
-
-state 44
-
-    (18) op_matematica -> OP_MAIS .
-
-    VARIAVEL        reduce using rule 18 (op_matematica -> OP_MAIS .)
-    INTEIRO         reduce using rule 18 (op_matematica -> OP_MAIS .)
-    STRING          reduce using rule 18 (op_matematica -> OP_MAIS .)
-    VERDADEIRO      reduce using rule 18 (op_matematica -> OP_MAIS .)
-    FALSO           reduce using rule 18 (op_matematica -> OP_MAIS .)
-
-
-state 45
-
-    (19) op_matematica -> OP_MENOS .
-
-    VARIAVEL        reduce using rule 19 (op_matematica -> OP_MENOS .)
-    INTEIRO         reduce using rule 19 (op_matematica -> OP_MENOS .)
-    STRING          reduce using rule 19 (op_matematica -> OP_MENOS .)
-    VERDADEIRO      reduce using rule 19 (op_matematica -> OP_MENOS .)
-    FALSO           reduce using rule 19 (op_matematica -> OP_MENOS .)
-
-
-state 46
-
-    (20) op_matematica -> OP_VEZES .
-
-    VARIAVEL        reduce using rule 20 (op_matematica -> OP_VEZES .)
-    INTEIRO         reduce using rule 20 (op_matematica -> OP_VEZES .)
-    STRING          reduce using rule 20 (op_matematica -> OP_VEZES .)
-    VERDADEIRO      reduce using rule 20 (op_matematica -> OP_VEZES .)
-    FALSO           reduce using rule 20 (op_matematica -> OP_VEZES .)
-
-
-state 47
-
-    (21) op_matematica -> OP_DIVIDE .
-
-    VARIAVEL        reduce using rule 21 (op_matematica -> OP_DIVIDE .)
-    INTEIRO         reduce using rule 21 (op_matematica -> OP_DIVIDE .)
-    STRING          reduce using rule 21 (op_matematica -> OP_DIVIDE .)
-    VERDADEIRO      reduce using rule 21 (op_matematica -> OP_DIVIDE .)
-    FALSO           reduce using rule 21 (op_matematica -> OP_DIVIDE .)
-
-
-state 48
-
-    (22) op_matematica -> OP_MODULO .
-
-    VARIAVEL        reduce using rule 22 (op_matematica -> OP_MODULO .)
-    INTEIRO         reduce using rule 22 (op_matematica -> OP_MODULO .)
-    STRING          reduce using rule 22 (op_matematica -> OP_MODULO .)
-    VERDADEIRO      reduce using rule 22 (op_matematica -> OP_MODULO .)
-    FALSO           reduce using rule 22 (op_matematica -> OP_MODULO .)
-
-
-state 49
+state 40
 
     (7) comando -> MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES .
 
@@ -873,36 +779,128 @@ state 49
     FECHA_CHAVES    reduce using rule 7 (comando -> MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES .)
 
 
-state 50
+state 41
 
     (12) possibilidades_mostraai -> STRING possibilidades_mostraai .
 
     FECHA_PARENTESES reduce using rule 12 (possibilidades_mostraai -> STRING possibilidades_mostraai .)
 
 
-state 51
+state 42
 
     (13) possibilidades_mostraai -> INTEIRO possibilidades_mostraai .
 
     FECHA_PARENTESES reduce using rule 13 (possibilidades_mostraai -> INTEIRO possibilidades_mostraai .)
 
 
-state 52
+state 43
 
     (14) possibilidades_mostraai -> VARIAVEL possibilidades_mostraai .
 
     FECHA_PARENTESES reduce using rule 14 (possibilidades_mostraai -> VARIAVEL possibilidades_mostraai .)
 
 
-state 53
+state 44
+
+    (8) comando -> VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES . FECHA_PARENTESES
+
+    FECHA_PARENTESES shift and go to state 63
+
+
+state 45
+
+    (17) declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL mat_multi VIRGULA . declara_varias_variaveis
+    (16) declara_varias_variaveis -> . VARIAVEL ATRIB_IGUAL mat_multi
+    (17) declara_varias_variaveis -> . VARIAVEL ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis
+
+    VARIAVEL        shift and go to state 64
+
+    declara_varias_variaveis       shift and go to state 65
+
+state 46
+
+    (24) mat_multi -> possibilidade_if_comparacao op_matematica . mat_multi
+    (23) mat_multi -> . possibilidade_if_comparacao
+    (24) mat_multi -> . possibilidade_if_comparacao op_matematica mat_multi
+    (42) possibilidade_if_comparacao -> . VARIAVEL
+    (43) possibilidade_if_comparacao -> . INTEIRO
+    (44) possibilidade_if_comparacao -> . STRING
+    (45) possibilidade_if_comparacao -> . VERDADEIRO
+    (46) possibilidade_if_comparacao -> . FALSO
+
+    VARIAVEL        shift and go to state 27
+    INTEIRO         shift and go to state 31
+    STRING          shift and go to state 32
+    VERDADEIRO      shift and go to state 33
+    FALSO           shift and go to state 34
+
+    possibilidade_if_comparacao    shift and go to state 30
+    mat_multi                      shift and go to state 66
+
+state 47
+
+    (18) op_matematica -> OP_MAIS .
+
+    VARIAVEL        reduce using rule 18 (op_matematica -> OP_MAIS .)
+    INTEIRO         reduce using rule 18 (op_matematica -> OP_MAIS .)
+    STRING          reduce using rule 18 (op_matematica -> OP_MAIS .)
+    VERDADEIRO      reduce using rule 18 (op_matematica -> OP_MAIS .)
+    FALSO           reduce using rule 18 (op_matematica -> OP_MAIS .)
+
+
+state 48
+
+    (19) op_matematica -> OP_MENOS .
+
+    VARIAVEL        reduce using rule 19 (op_matematica -> OP_MENOS .)
+    INTEIRO         reduce using rule 19 (op_matematica -> OP_MENOS .)
+    STRING          reduce using rule 19 (op_matematica -> OP_MENOS .)
+    VERDADEIRO      reduce using rule 19 (op_matematica -> OP_MENOS .)
+    FALSO           reduce using rule 19 (op_matematica -> OP_MENOS .)
+
+
+state 49
+
+    (20) op_matematica -> OP_VEZES .
+
+    VARIAVEL        reduce using rule 20 (op_matematica -> OP_VEZES .)
+    INTEIRO         reduce using rule 20 (op_matematica -> OP_VEZES .)
+    STRING          reduce using rule 20 (op_matematica -> OP_VEZES .)
+    VERDADEIRO      reduce using rule 20 (op_matematica -> OP_VEZES .)
+    FALSO           reduce using rule 20 (op_matematica -> OP_VEZES .)
+
+
+state 50
+
+    (21) op_matematica -> OP_DIVIDE .
+
+    VARIAVEL        reduce using rule 21 (op_matematica -> OP_DIVIDE .)
+    INTEIRO         reduce using rule 21 (op_matematica -> OP_DIVIDE .)
+    STRING          reduce using rule 21 (op_matematica -> OP_DIVIDE .)
+    VERDADEIRO      reduce using rule 21 (op_matematica -> OP_DIVIDE .)
+    FALSO           reduce using rule 21 (op_matematica -> OP_DIVIDE .)
+
+
+state 51
+
+    (22) op_matematica -> OP_MODULO .
+
+    VARIAVEL        reduce using rule 22 (op_matematica -> OP_MODULO .)
+    INTEIRO         reduce using rule 22 (op_matematica -> OP_MODULO .)
+    STRING          reduce using rule 22 (op_matematica -> OP_MODULO .)
+    VERDADEIRO      reduce using rule 22 (op_matematica -> OP_MODULO .)
+    FALSO           reduce using rule 22 (op_matematica -> OP_MODULO .)
+
+
+state 52
 
     (25) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES . ABRE_CHAVES comandos FECHA_CHAVES
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES . ABRE_CHAVES comandos FECHA_CHAVES SENAO ABRE_CHAVES comandos FECHA_CHAVES
 
-    ABRE_CHAVES     shift and go to state 68
+    ABRE_CHAVES     shift and go to state 67
 
 
-state 54
+state 53
 
     (32) comparacao -> possibilidade_if_comparacao op_relacional . possibilidade_if_comparacao
     (33) comparacao -> possibilidade_if_comparacao op_relacional . possibilidade_if_comparacao op_logico comparacao
@@ -912,15 +910,15 @@ state 54
     (45) possibilidade_if_comparacao -> . VERDADEIRO
     (46) possibilidade_if_comparacao -> . FALSO
 
-    VARIAVEL        shift and go to state 24
-    INTEIRO         shift and go to state 28
-    STRING          shift and go to state 29
-    VERDADEIRO      shift and go to state 30
-    FALSO           shift and go to state 31
+    VARIAVEL        shift and go to state 27
+    INTEIRO         shift and go to state 31
+    STRING          shift and go to state 32
+    VERDADEIRO      shift and go to state 33
+    FALSO           shift and go to state 34
 
-    possibilidade_if_comparacao    shift and go to state 69
+    possibilidade_if_comparacao    shift and go to state 68
 
-state 55
+state 54
 
     (36) op_relacional -> REL_MENOR .
 
@@ -931,7 +929,7 @@ state 55
     FALSO           reduce using rule 36 (op_relacional -> REL_MENOR .)
 
 
-state 56
+state 55
 
     (37) op_relacional -> REL_MAIOR .
 
@@ -942,7 +940,7 @@ state 56
     FALSO           reduce using rule 37 (op_relacional -> REL_MAIOR .)
 
 
-state 57
+state 56
 
     (38) op_relacional -> REL_MENOR_IGUAL .
 
@@ -953,7 +951,7 @@ state 57
     FALSO           reduce using rule 38 (op_relacional -> REL_MENOR_IGUAL .)
 
 
-state 58
+state 57
 
     (39) op_relacional -> REL_MAIOR_IGUAL .
 
@@ -964,7 +962,7 @@ state 58
     FALSO           reduce using rule 39 (op_relacional -> REL_MAIOR_IGUAL .)
 
 
-state 59
+state 58
 
     (40) op_relacional -> REL_DUPLO_IGUAL .
 
@@ -975,7 +973,7 @@ state 59
     FALSO           reduce using rule 40 (op_relacional -> REL_DUPLO_IGUAL .)
 
 
-state 60
+state 59
 
     (41) op_relacional -> REL_DIFERENTE .
 
@@ -986,30 +984,30 @@ state 60
     FALSO           reduce using rule 41 (op_relacional -> REL_DIFERENTE .)
 
 
-state 61
+state 60
 
     (27) comando -> FAZAI chamada_funcao ABRE_CHAVES comandos . FECHA_CHAVES
 
-    FECHA_CHAVES    shift and go to state 70
+    FECHA_CHAVES    shift and go to state 69
 
 
-state 62
+state 61
 
     (29) chamada_funcao -> VARIAVEL ABRE_PARENTESES FECHA_PARENTESES .
 
     ABRE_CHAVES     reduce using rule 29 (chamada_funcao -> VARIAVEL ABRE_PARENTESES FECHA_PARENTESES .)
 
 
-state 63
+state 62
 
     (30) chamada_funcao -> VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao . FECHA_PARENTESES
     (31) chamada_funcao -> VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao . VIRGULA possibilidade_if_comparacao FECHA_PARENTESES
 
-    FECHA_PARENTESES shift and go to state 71
-    VIRGULA         shift and go to state 72
+    FECHA_PARENTESES shift and go to state 70
+    VIRGULA         shift and go to state 71
 
 
-state 64
+state 63
 
     (8) comando -> VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES .
 
@@ -1022,15 +1020,15 @@ state 64
     FECHA_CHAVES    reduce using rule 8 (comando -> VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES .)
 
 
-state 65
+state 64
 
     (16) declara_varias_variaveis -> VARIAVEL . ATRIB_IGUAL mat_multi
     (17) declara_varias_variaveis -> VARIAVEL . ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis
 
-    ATRIB_IGUAL     shift and go to state 73
+    ATRIB_IGUAL     shift and go to state 72
 
 
-state 66
+state 65
 
     (17) declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis .
 
@@ -1043,7 +1041,7 @@ state 66
     FECHA_CHAVES    reduce using rule 17 (declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis .)
 
 
-state 67
+state 66
 
     (24) mat_multi -> possibilidade_if_comparacao op_matematica mat_multi .
 
@@ -1057,13 +1055,13 @@ state 67
     FECHA_CHAVES    reduce using rule 24 (mat_multi -> possibilidade_if_comparacao op_matematica mat_multi .)
 
 
-state 68
+state 67
 
     (25) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES . comandos FECHA_CHAVES
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES . comandos FECHA_CHAVES SENAO ABRE_CHAVES comandos FECHA_CHAVES
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comandos -> . COMENTARIO VARIAVEL
+    (6) comando -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
@@ -1075,16 +1073,16 @@ state 68
     (17) declara_varias_variaveis -> . VARIAVEL ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis
 
     COMENTARIO      shift and go to state 9
-    MOSTRAAI        shift and go to state 11
-    VARIAVEL        shift and go to state 10
+    MOSTRAAI        shift and go to state 10
+    VARIAVEL        shift and go to state 11
     SE              shift and go to state 13
     FAZAI           shift and go to state 14
 
-    comandos                       shift and go to state 74
+    comandos                       shift and go to state 73
     comando                        shift and go to state 8
     declara_varias_variaveis       shift and go to state 12
 
-state 69
+state 68
 
     (32) comparacao -> possibilidade_if_comparacao op_relacional possibilidade_if_comparacao .
     (33) comparacao -> possibilidade_if_comparacao op_relacional possibilidade_if_comparacao . op_logico comparacao
@@ -1092,12 +1090,12 @@ state 69
     (35) op_logico -> . REL_OU
 
     FECHA_PARENTESES reduce using rule 32 (comparacao -> possibilidade_if_comparacao op_relacional possibilidade_if_comparacao .)
-    REL_E           shift and go to state 76
-    REL_OU          shift and go to state 77
+    REL_E           shift and go to state 75
+    REL_OU          shift and go to state 76
 
-    op_logico                      shift and go to state 75
+    op_logico                      shift and go to state 74
 
-state 70
+state 69
 
     (27) comando -> FAZAI chamada_funcao ABRE_CHAVES comandos FECHA_CHAVES .
 
@@ -1110,14 +1108,14 @@ state 70
     FECHA_CHAVES    reduce using rule 27 (comando -> FAZAI chamada_funcao ABRE_CHAVES comandos FECHA_CHAVES .)
 
 
-state 71
+state 70
 
     (30) chamada_funcao -> VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao FECHA_PARENTESES .
 
     ABRE_CHAVES     reduce using rule 30 (chamada_funcao -> VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao FECHA_PARENTESES .)
 
 
-state 72
+state 71
 
     (31) chamada_funcao -> VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao VIRGULA . possibilidade_if_comparacao FECHA_PARENTESES
     (42) possibilidade_if_comparacao -> . VARIAVEL
@@ -1126,15 +1124,15 @@ state 72
     (45) possibilidade_if_comparacao -> . VERDADEIRO
     (46) possibilidade_if_comparacao -> . FALSO
 
-    VARIAVEL        shift and go to state 24
-    INTEIRO         shift and go to state 28
-    STRING          shift and go to state 29
-    VERDADEIRO      shift and go to state 30
-    FALSO           shift and go to state 31
+    VARIAVEL        shift and go to state 27
+    INTEIRO         shift and go to state 31
+    STRING          shift and go to state 32
+    VERDADEIRO      shift and go to state 33
+    FALSO           shift and go to state 34
 
-    possibilidade_if_comparacao    shift and go to state 78
+    possibilidade_if_comparacao    shift and go to state 77
 
-state 73
+state 72
 
     (16) declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL . mat_multi
     (17) declara_varias_variaveis -> VARIAVEL ATRIB_IGUAL . mat_multi VIRGULA declara_varias_variaveis
@@ -1146,24 +1144,24 @@ state 73
     (45) possibilidade_if_comparacao -> . VERDADEIRO
     (46) possibilidade_if_comparacao -> . FALSO
 
-    VARIAVEL        shift and go to state 24
-    INTEIRO         shift and go to state 28
-    STRING          shift and go to state 29
-    VERDADEIRO      shift and go to state 30
-    FALSO           shift and go to state 31
+    VARIAVEL        shift and go to state 27
+    INTEIRO         shift and go to state 31
+    STRING          shift and go to state 32
+    VERDADEIRO      shift and go to state 33
+    FALSO           shift and go to state 34
 
-    mat_multi                      shift and go to state 26
-    possibilidade_if_comparacao    shift and go to state 27
+    mat_multi                      shift and go to state 29
+    possibilidade_if_comparacao    shift and go to state 30
 
-state 74
+state 73
 
     (25) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos . FECHA_CHAVES
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos . FECHA_CHAVES SENAO ABRE_CHAVES comandos FECHA_CHAVES
 
-    FECHA_CHAVES    shift and go to state 79
+    FECHA_CHAVES    shift and go to state 78
 
 
-state 75
+state 74
 
     (33) comparacao -> possibilidade_if_comparacao op_relacional possibilidade_if_comparacao op_logico . comparacao
     (32) comparacao -> . possibilidade_if_comparacao op_relacional possibilidade_if_comparacao
@@ -1174,16 +1172,16 @@ state 75
     (45) possibilidade_if_comparacao -> . VERDADEIRO
     (46) possibilidade_if_comparacao -> . FALSO
 
-    VARIAVEL        shift and go to state 24
-    INTEIRO         shift and go to state 28
-    STRING          shift and go to state 29
-    VERDADEIRO      shift and go to state 30
-    FALSO           shift and go to state 31
+    VARIAVEL        shift and go to state 27
+    INTEIRO         shift and go to state 31
+    STRING          shift and go to state 32
+    VERDADEIRO      shift and go to state 33
+    FALSO           shift and go to state 34
 
-    possibilidade_if_comparacao    shift and go to state 37
-    comparacao                     shift and go to state 80
+    possibilidade_if_comparacao    shift and go to state 36
+    comparacao                     shift and go to state 79
 
-state 76
+state 75
 
     (34) op_logico -> REL_E .
 
@@ -1194,7 +1192,7 @@ state 76
     FALSO           reduce using rule 34 (op_logico -> REL_E .)
 
 
-state 77
+state 76
 
     (35) op_logico -> REL_OU .
 
@@ -1205,14 +1203,14 @@ state 77
     FALSO           reduce using rule 35 (op_logico -> REL_OU .)
 
 
-state 78
+state 77
 
     (31) chamada_funcao -> VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao VIRGULA possibilidade_if_comparacao . FECHA_PARENTESES
 
-    FECHA_PARENTESES shift and go to state 81
+    FECHA_PARENTESES shift and go to state 80
 
 
-state 79
+state 78
 
     (25) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES .
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES . SENAO ABRE_CHAVES comandos FECHA_CHAVES
@@ -1224,36 +1222,36 @@ state 79
     FAZAI           reduce using rule 25 (comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES .)
     FIM             reduce using rule 25 (comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES .)
     FECHA_CHAVES    reduce using rule 25 (comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES .)
-    SENAO           shift and go to state 82
+    SENAO           shift and go to state 81
 
 
-state 80
+state 79
 
     (33) comparacao -> possibilidade_if_comparacao op_relacional possibilidade_if_comparacao op_logico comparacao .
 
     FECHA_PARENTESES reduce using rule 33 (comparacao -> possibilidade_if_comparacao op_relacional possibilidade_if_comparacao op_logico comparacao .)
 
 
-state 81
+state 80
 
     (31) chamada_funcao -> VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao VIRGULA possibilidade_if_comparacao FECHA_PARENTESES .
 
     ABRE_CHAVES     reduce using rule 31 (chamada_funcao -> VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao VIRGULA possibilidade_if_comparacao FECHA_PARENTESES .)
 
 
-state 82
+state 81
 
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES SENAO . ABRE_CHAVES comandos FECHA_CHAVES
 
-    ABRE_CHAVES     shift and go to state 83
+    ABRE_CHAVES     shift and go to state 82
 
 
-state 83
+state 82
 
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES SENAO ABRE_CHAVES . comandos FECHA_CHAVES
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comandos -> . COMENTARIO VARIAVEL
+    (6) comando -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
@@ -1265,23 +1263,23 @@ state 83
     (17) declara_varias_variaveis -> . VARIAVEL ATRIB_IGUAL mat_multi VIRGULA declara_varias_variaveis
 
     COMENTARIO      shift and go to state 9
-    MOSTRAAI        shift and go to state 11
-    VARIAVEL        shift and go to state 10
+    MOSTRAAI        shift and go to state 10
+    VARIAVEL        shift and go to state 11
     SE              shift and go to state 13
     FAZAI           shift and go to state 14
 
-    comandos                       shift and go to state 84
+    comandos                       shift and go to state 83
     comando                        shift and go to state 8
     declara_varias_variaveis       shift and go to state 12
 
-state 84
+state 83
 
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES SENAO ABRE_CHAVES comandos . FECHA_CHAVES
 
-    FECHA_CHAVES    shift and go to state 85
+    FECHA_CHAVES    shift and go to state 84
 
 
-state 85
+state 84
 
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES SENAO ABRE_CHAVES comandos FECHA_CHAVES .
 

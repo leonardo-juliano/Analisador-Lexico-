@@ -157,7 +157,7 @@ def t_COMENTARIO(t):
     r'(\#[^"]*\#)'
 
 def t_variavel_mf(t):
-    r'([0-9]+[a-z]+)|([@!#$%&*]+[a-z]+|[a-z]+\.[0-9]+|[a-z]+[@!#$%&*]+)'
+    r'([0-9]+[a-z]+)|([@!$%&*]+[a-z]+|[a-z]+\.[0-9]+|[a-z]+[@!#$%&*]+)'
     return t
 
 def t_numero_mf(t):
@@ -221,7 +221,7 @@ def p_comandos(p):
 
 def p_comentario(p):
     '''
-    comandos : COMENTARIO VARIAVEL
+    comando : COMENTARIO 
     '''
 
 def p_mostraai(p):
@@ -480,7 +480,7 @@ class Application():
         self.lb_codigo.place(relx=0.001, rely=-0.001, relwidth=0.2, relheight=0.07)
 
         # criação da label da analise lexica
-        self.lb_analise = Label(text="Análise Léxica", bg="white", font=('', 12))
+        self.lb_analise = Label(text="Análise Léxica e Análise Sintatica", bg="white", font=('', 12))
         self.lb_analise.place(relx=0.001, rely=0.62, relwidth=0.2, relheight=0.07)
 
         self.codigo_entry = tk.Text(self.frame_1)
