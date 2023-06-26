@@ -284,7 +284,7 @@ def p_chama_fazai(p):
     '''
     comando : FAZAI PONTO VARIAVEL
     '''
-def p_chamamada_funcao(p):
+def p_chamada_funcao(p):
     '''
     chamada_funcao : VARIAVEL ABRE_PARENTESES FECHA_PARENTESES
     | VARIAVEL ABRE_PARENTESES possibilidade_if_comparacao FECHA_PARENTESES
