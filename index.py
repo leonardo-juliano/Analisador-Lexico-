@@ -117,6 +117,7 @@ t_FALSO = r'FALSO'
 t_MOSTRAAI = r'MOSTRAAI'
 t_FAZAI = r'FAZAI'
 t_FALAI = r'FALAI'
+t_COMENTARIO = r'\#.*'
 
 t_ATRIB_NEGACAO = r'\~'
 t_ATRIB_IGUAL = r'\='
@@ -153,8 +154,8 @@ def t_string_mf(t):
     r'("[^"]*)'
     return t
 
-def t_COMENTARIO(t):
-    r'(\#[^"]*\#)'
+# def t_COMENTARIO(t):
+#     r'(\#[^"]*\#)'
 
 def t_variavel_mf(t):
     r'([0-9]+[a-z]+)|([@!$%&*]+[a-z]+|[a-z]+\.[0-9]+|[a-z]+[@!#$%&*]+)'
@@ -220,8 +221,8 @@ def p_comandos(p):
     '''
 
 def p_comentario(p):
-    '''
-    comando : COMENTARIO 
+   '''
+    comandos : COMENTARIO 
     '''
 
 def p_mostraai(p):

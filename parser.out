@@ -33,7 +33,7 @@ Rule 2     statements -> statement
 Rule 3     statement -> IFSULDEMINAS COMPILADORES INICIO comandos FIM
 Rule 4     comandos -> comando
 Rule 5     comandos -> comando comandos
-Rule 6     comando -> COMENTARIO
+Rule 6     comandos -> COMENTARIO
 Rule 7     comando -> MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
 Rule 8     comando -> VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
 Rule 9     possibilidades_mostraai -> STRING
@@ -211,7 +211,7 @@ state 6
     (3) statement -> IFSULDEMINAS COMPILADORES INICIO . comandos FIM
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comando -> . COMENTARIO
+    (6) comandos -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
@@ -245,7 +245,7 @@ state 8
     (5) comandos -> comando . comandos
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comando -> . COMENTARIO
+    (6) comandos -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
@@ -270,15 +270,10 @@ state 8
 
 state 9
 
-    (6) comando -> COMENTARIO .
+    (6) comandos -> COMENTARIO .
 
-    COMENTARIO      reduce using rule 6 (comando -> COMENTARIO .)
-    MOSTRAAI        reduce using rule 6 (comando -> COMENTARIO .)
-    VARIAVEL        reduce using rule 6 (comando -> COMENTARIO .)
-    SE              reduce using rule 6 (comando -> COMENTARIO .)
-    FAZAI           reduce using rule 6 (comando -> COMENTARIO .)
-    FIM             reduce using rule 6 (comando -> COMENTARIO .)
-    FECHA_CHAVES    reduce using rule 6 (comando -> COMENTARIO .)
+    FIM             reduce using rule 6 (comandos -> COMENTARIO .)
+    FECHA_CHAVES    reduce using rule 6 (comandos -> COMENTARIO .)
 
 
 state 10
@@ -712,7 +707,7 @@ state 37
     (27) comando -> FAZAI chamada_funcao ABRE_CHAVES . comandos FECHA_CHAVES
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comando -> . COMENTARIO
+    (6) comandos -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
@@ -1061,7 +1056,7 @@ state 67
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES . comandos FECHA_CHAVES SENAO ABRE_CHAVES comandos FECHA_CHAVES
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comando -> . COMENTARIO
+    (6) comandos -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
@@ -1251,7 +1246,7 @@ state 82
     (26) comando -> SE ABRE_PARENTESES comparacao FECHA_PARENTESES ABRE_CHAVES comandos FECHA_CHAVES SENAO ABRE_CHAVES . comandos FECHA_CHAVES
     (4) comandos -> . comando
     (5) comandos -> . comando comandos
-    (6) comando -> . COMENTARIO
+    (6) comandos -> . COMENTARIO
     (7) comando -> . MOSTRAAI ABRE_PARENTESES possibilidades_mostraai FECHA_PARENTESES
     (8) comando -> . VARIAVEL ATRIB_IGUAL FALAI ABRE_PARENTESES FECHA_PARENTESES
     (15) comando -> . declara_varias_variaveis
